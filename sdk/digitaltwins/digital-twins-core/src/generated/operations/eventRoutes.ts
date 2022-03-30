@@ -6,6 +6,7 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { EventRoutes } from "../operationsInterfaces";
 import * as coreHttp from "@azure/core-http";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -21,10 +22,8 @@ import {
   EventRoutesListNextResponse
 } from "../models";
 
-/**
- * Class representing a EventRoutes.
- */
-export class EventRoutes {
+/** Class containing EventRoutes operations. */
+export class EventRoutesImpl implements EventRoutes {
   private readonly client: AzureDigitalTwinsAPI;
 
   /**
@@ -44,11 +43,11 @@ export class EventRoutes {
   list(
     options?: EventRoutesListOptionalParams
   ): Promise<EventRoutesListResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { options: operationOptions },
+      operationArguments,
       listOperationSpec
     ) as Promise<EventRoutesListResponse>;
   }
@@ -66,11 +65,12 @@ export class EventRoutes {
     id: string,
     options?: EventRoutesGetByIdOptionalParams
   ): Promise<EventRoutesGetByIdResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, options: operationOptions },
+      operationArguments,
       getByIdOperationSpec
     ) as Promise<EventRoutesGetByIdResponse>;
   }
@@ -91,11 +91,12 @@ export class EventRoutes {
     id: string,
     options?: EventRoutesAddOptionalParams
   ): Promise<coreHttp.RestResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, options: operationOptions },
+      operationArguments,
       addOperationSpec
     ) as Promise<coreHttp.RestResponse>;
   }
@@ -113,11 +114,12 @@ export class EventRoutes {
     id: string,
     options?: EventRoutesDeleteOptionalParams
   ): Promise<coreHttp.RestResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, options: operationOptions },
+      operationArguments,
       deleteOperationSpec
     ) as Promise<coreHttp.RestResponse>;
   }
@@ -131,17 +133,17 @@ export class EventRoutes {
     nextLink: string,
     options?: EventRoutesListNextOptionalParams
   ): Promise<EventRoutesListNextResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      nextLink,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { nextLink, options: operationOptions },
+      operationArguments,
       listNextOperationSpec
     ) as Promise<EventRoutesListNextResponse>;
   }
 }
 // Operation Specifications
-
 const serializer = new coreHttp.Serializer(Mappers, /* isXml */ false);
 
 const listOperationSpec: coreHttp.OperationSpec = {
@@ -158,6 +160,7 @@ const listOperationSpec: coreHttp.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host],
   headerParameters: [
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate,
     Parameters.maxItemsPerPage
@@ -177,7 +180,11 @@ const getByIdOperationSpec: coreHttp.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.traceparent, Parameters.tracestate],
+  headerParameters: [
+    Parameters.accept,
+    Parameters.traceparent,
+    Parameters.tracestate
+  ],
   serializer
 };
 const addOperationSpec: coreHttp.OperationSpec = {
@@ -194,6 +201,7 @@ const addOperationSpec: coreHttp.OperationSpec = {
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [
     Parameters.contentType,
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate
   ],
@@ -211,7 +219,11 @@ const deleteOperationSpec: coreHttp.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.traceparent, Parameters.tracestate],
+  headerParameters: [
+    Parameters.accept,
+    Parameters.traceparent,
+    Parameters.tracestate
+  ],
   serializer
 };
 const listNextOperationSpec: coreHttp.OperationSpec = {
@@ -228,6 +240,7 @@ const listNextOperationSpec: coreHttp.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.nextLink],
   headerParameters: [
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate,
     Parameters.maxItemsPerPage

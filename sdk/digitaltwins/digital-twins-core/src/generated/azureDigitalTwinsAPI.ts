@@ -6,37 +6,64 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
-import * as operations from "./operations";
-import * as Models from "./models";
-import * as Mappers from "./models/mappers";
-import { AzureDigitalTwinsAPIContext } from "./azureDigitalTwinsAPIContext";
+import * as coreHttp from "@azure/core-http";
+import {
+  DigitalTwinModelsImpl,
+  QueryImpl,
+  DigitalTwinsImpl,
+  EventRoutesImpl
+} from "./operations";
+import {
+  DigitalTwinModels,
+  Query,
+  DigitalTwins,
+  EventRoutes
+} from "./operationsInterfaces";
 import { AzureDigitalTwinsAPIOptionalParams } from "./models";
 
-class AzureDigitalTwinsAPI extends AzureDigitalTwinsAPIContext {
+const packageName = "@azure/digital-twins-core";
+const packageVersion = "1.1.0-beta.1";
+
+export class AzureDigitalTwinsAPI extends coreHttp.ServiceClient {
+  $host: string;
+  apiVersion: string;
+
   /**
    * Initializes a new instance of the AzureDigitalTwinsAPI class.
    * @param options The parameter options
    */
   constructor(options?: AzureDigitalTwinsAPIOptionalParams) {
-    super(options);
-    this.digitalTwinModels = new operations.DigitalTwinModels(this);
-    this.query = new operations.Query(this);
-    this.digitalTwins = new operations.DigitalTwins(this);
-    this.eventRoutes = new operations.EventRoutes(this);
+    // Initializing default values for options
+    if (!options) {
+      options = {};
+    }
+
+    const defaultUserAgent = `azsdk-js-${packageName.replace(
+      /@.*\//,
+      ""
+    )}/${packageVersion} ${coreHttp.getDefaultUserAgentValue()}`;
+
+    super(undefined, {
+      ...options,
+      userAgent: options.userAgent
+        ? `${options.userAgent} ${defaultUserAgent}`
+        : `${defaultUserAgent}`
+    });
+
+    this.requestContentType = "application/json; charset=utf-8";
+    this.baseUri = options.endpoint ?? "https://digitaltwins-hostname";
+
+    // Assigning values to Constant parameters
+    this.$host = options.$host || "https://digitaltwins-hostname";
+    this.apiVersion = options.apiVersion || "2021-06-30-preview";
+    this.digitalTwinModels = new DigitalTwinModelsImpl(this);
+    this.query = new QueryImpl(this);
+    this.digitalTwins = new DigitalTwinsImpl(this);
+    this.eventRoutes = new EventRoutesImpl(this);
   }
 
-  digitalTwinModels: operations.DigitalTwinModels;
-  query: operations.Query;
-  digitalTwins: operations.DigitalTwins;
-  eventRoutes: operations.EventRoutes;
+  digitalTwinModels: DigitalTwinModels;
+  query: Query;
+  digitalTwins: DigitalTwins;
+  eventRoutes: EventRoutes;
 }
-
-// Operation Specifications
-
-export {
-  AzureDigitalTwinsAPI,
-  AzureDigitalTwinsAPIContext,
-  Models as AzureDigitalTwinsAPIModels,
-  Mappers as AzureDigitalTwinsAPIMappers
-};
-export * from "./operations";

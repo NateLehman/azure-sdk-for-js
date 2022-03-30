@@ -39,7 +39,24 @@ export const models: OperationParameter = {
     serializedName: "models",
     type: {
       name: "Sequence",
-      element: { type: { name: "any" } }
+      element: {
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "any" } }
+        }
+      }
+    }
+  }
+};
+
+export const accept: OperationParameter = {
+  parameterPath: "accept",
+  mapper: {
+    defaultValue: "application/json",
+    isConstant: true,
+    serializedName: "Accept",
+    type: {
+      name: "String"
     }
   }
 };
@@ -79,7 +96,7 @@ export const tracestate: OperationParameter = {
 export const apiVersion: OperationQueryParameter = {
   parameterPath: "apiVersion",
   mapper: {
-    defaultValue: "2020-10-31",
+    defaultValue: "2021-06-30-preview",
     isConstant: true,
     serializedName: "api-version",
     type: {
@@ -94,15 +111,20 @@ export const dependenciesFor: OperationQueryParameter = {
     serializedName: "dependenciesFor",
     type: {
       name: "Sequence",
-      element: { type: { name: "String" } }
+      element: {
+        type: {
+          name: "String"
+        }
+      }
     }
   },
-  collectionFormat: QueryCollectionFormat.Csv
+  collectionFormat: QueryCollectionFormat.Multi
 };
 
 export const includeModelDefinition: OperationQueryParameter = {
   parameterPath: ["options", "includeModelDefinition"],
   mapper: {
+    defaultValue: false,
     serializedName: "includeModelDefinition",
     type: {
       name: "Boolean"
@@ -150,7 +172,12 @@ export const updateModel: OperationParameter = {
     required: true,
     type: {
       name: "Sequence",
-      element: { type: { name: "any" } }
+      element: {
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "any" } }
+        }
+      }
     }
   }
 };
@@ -178,7 +205,8 @@ export const twin: OperationParameter = {
     serializedName: "twin",
     required: true,
     type: {
-      name: "any"
+      name: "Dictionary",
+      value: { type: { name: "any" } }
     }
   }
 };
@@ -210,7 +238,12 @@ export const patchDocument: OperationParameter = {
     required: true,
     type: {
       name: "Sequence",
-      element: { type: { name: "any" } }
+      element: {
+        type: {
+          name: "Dictionary",
+          value: { type: { name: "any" } }
+        }
+      }
     }
   }
 };
@@ -232,7 +265,8 @@ export const relationship: OperationParameter = {
     serializedName: "relationship",
     required: true,
     type: {
-      name: "any"
+      name: "Dictionary",
+      value: { type: { name: "any" } }
     }
   }
 };
@@ -253,7 +287,8 @@ export const telemetry: OperationParameter = {
     serializedName: "telemetry",
     required: true,
     type: {
-      name: "any"
+      name: "Dictionary",
+      value: { type: { name: "any" } }
     }
   }
 };

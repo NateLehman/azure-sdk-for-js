@@ -6,6 +6,7 @@
  * Changes may cause incorrect behavior and will be lost if the code is regenerated.
  */
 
+import { DigitalTwinModels } from "../operationsInterfaces";
 import * as coreHttp from "@azure/core-http";
 import * as Mappers from "../models/mappers";
 import * as Parameters from "../models/parameters";
@@ -23,10 +24,8 @@ import {
   DigitalTwinModelsListNextResponse
 } from "../models";
 
-/**
- * Class representing a DigitalTwinModels.
- */
-export class DigitalTwinModels {
+/** Class containing DigitalTwinModels operations. */
+export class DigitalTwinModelsImpl implements DigitalTwinModels {
   private readonly client: AzureDigitalTwinsAPI;
 
   /**
@@ -53,11 +52,11 @@ export class DigitalTwinModels {
   add(
     options?: DigitalTwinModelsAddOptionalParams
   ): Promise<DigitalTwinModelsAddResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { options: operationOptions },
+      operationArguments,
       addOperationSpec
     ) as Promise<DigitalTwinModelsAddResponse>;
   }
@@ -76,11 +75,11 @@ export class DigitalTwinModels {
   list(
     options?: DigitalTwinModelsListOptionalParams
   ): Promise<DigitalTwinModelsListResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { options: operationOptions },
+      operationArguments,
       listOperationSpec
     ) as Promise<DigitalTwinModelsListResponse>;
   }
@@ -101,11 +100,12 @@ export class DigitalTwinModels {
     id: string,
     options?: DigitalTwinModelsGetByIdOptionalParams
   ): Promise<DigitalTwinModelsGetByIdResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, options: operationOptions },
+      operationArguments,
       getByIdOperationSpec
     ) as Promise<DigitalTwinModelsGetByIdResponse>;
   }
@@ -129,14 +129,16 @@ export class DigitalTwinModels {
    */
   update(
     id: string,
-    updateModel: any[],
+    updateModel: Record<string, unknown>[],
     options?: DigitalTwinModelsUpdateOptionalParams
   ): Promise<coreHttp.RestResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      updateModel,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, updateModel, options: operationOptions },
+      operationArguments,
       updateOperationSpec
     ) as Promise<coreHttp.RestResponse>;
   }
@@ -159,11 +161,12 @@ export class DigitalTwinModels {
     id: string,
     options?: DigitalTwinModelsDeleteOptionalParams
   ): Promise<coreHttp.RestResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      id,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { id, options: operationOptions },
+      operationArguments,
       deleteOperationSpec
     ) as Promise<coreHttp.RestResponse>;
   }
@@ -177,17 +180,17 @@ export class DigitalTwinModels {
     nextLink: string,
     options?: DigitalTwinModelsListNextOptionalParams
   ): Promise<DigitalTwinModelsListNextResponse> {
-    const operationOptions: coreHttp.RequestOptionsBase = coreHttp.operationOptionsToRequestOptionsBase(
-      options || {}
-    );
+    const operationArguments: coreHttp.OperationArguments = {
+      nextLink,
+      options: coreHttp.operationOptionsToRequestOptionsBase(options || {})
+    };
     return this.client.sendOperationRequest(
-      { nextLink, options: operationOptions },
+      operationArguments,
       listNextOperationSpec
     ) as Promise<DigitalTwinModelsListNextResponse>;
   }
 }
 // Operation Specifications
-
 const serializer = new coreHttp.Serializer(Mappers, /* isXml */ false);
 
 const addOperationSpec: coreHttp.OperationSpec = {
@@ -213,6 +216,7 @@ const addOperationSpec: coreHttp.OperationSpec = {
   urlParameters: [Parameters.$host],
   headerParameters: [
     Parameters.contentType,
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate
   ],
@@ -237,6 +241,7 @@ const listOperationSpec: coreHttp.OperationSpec = {
   ],
   urlParameters: [Parameters.$host],
   headerParameters: [
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate,
     Parameters.maxItemsPerPage
@@ -256,7 +261,11 @@ const getByIdOperationSpec: coreHttp.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion, Parameters.includeModelDefinition],
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.traceparent, Parameters.tracestate],
+  headerParameters: [
+    Parameters.accept,
+    Parameters.traceparent,
+    Parameters.tracestate
+  ],
   serializer
 };
 const updateOperationSpec: coreHttp.OperationSpec = {
@@ -272,6 +281,7 @@ const updateOperationSpec: coreHttp.OperationSpec = {
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.id],
   headerParameters: [
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate,
     Parameters.contentType1
@@ -290,7 +300,11 @@ const deleteOperationSpec: coreHttp.OperationSpec = {
   },
   queryParameters: [Parameters.apiVersion],
   urlParameters: [Parameters.$host, Parameters.id],
-  headerParameters: [Parameters.traceparent, Parameters.tracestate],
+  headerParameters: [
+    Parameters.accept,
+    Parameters.traceparent,
+    Parameters.tracestate
+  ],
   serializer
 };
 const listNextOperationSpec: coreHttp.OperationSpec = {
@@ -311,6 +325,7 @@ const listNextOperationSpec: coreHttp.OperationSpec = {
   ],
   urlParameters: [Parameters.$host, Parameters.nextLink],
   headerParameters: [
+    Parameters.accept,
     Parameters.traceparent,
     Parameters.tracestate,
     Parameters.maxItemsPerPage
