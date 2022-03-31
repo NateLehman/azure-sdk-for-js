@@ -163,14 +163,16 @@ describe("DigitalTwinsClient", () => {
     testClient.upsertDigitalTwin(testTwinId, JSON.stringify(testJsonString));
     assert.isTrue(stub.calledOnce);
     assert.isTrue(
-      stub.calledWith(testTwinId, testJsonString, operationOptionsSinonMatcher(updatedOptions))
+      stub.calledWith(testTwinId, JSON.parse(testJsonString), operationOptionsSinonMatcher(updatedOptions))
     );
     assert.isNotNull(updatedOptions);
     assert.isNotNull(span);
   });
 
   it("upsertDigitalTwin returns a promise of the generated code return value", async () => {
-    const testReturn = testHeaders + testBody + testDefaultResponse;
+    const testJsonString = '{ "key": "value" }';
+    const testResponse = { _response: { parsedBody: JSON.parse(testJsonString) } };
+    const testReturn = testHeaders + testBody + testDefaultResponse + testResponse;
     sinon.stub(testClient["client"].digitalTwins, "add").resolves(testReturn);
     const retVal = await testClient.upsertDigitalTwin(testTwinId, JSON.stringify(testJsonString));
     assert.deepEqual(retVal, testReturn);
@@ -376,7 +378,7 @@ describe("DigitalTwinsClient", () => {
       stub.calledWith(
         testTwinId,
         testRelationshipId,
-        testJsonString,
+        JSON.parse(testJsonString),
         operationOptionsSinonMatcher(updatedOptions)
       )
     );

@@ -15,10 +15,9 @@ generate-metadata: false
 add-credentials: false
 license-header: MICROSOFT_MIT_NO_VERSION
 input-file: https://github.com/Azure/azure-rest-api-specs/blob/1233f92f47db0cc4201cb4065180d9f4b67d2b6b/specification/digitaltwins/data-plane/Microsoft.DigitalTwins/preview/2021-06-30-preview/digitaltwins.json
-output-folder: ../src/generated
-source-code-folder-path: .
+output-folder: ../
+source-code-folder-path: ./src/generated
 package-version: 1.1.0-beta.1
-clear-output-folder: true
 ```
 
 ## Customizations for Track 2 Generator

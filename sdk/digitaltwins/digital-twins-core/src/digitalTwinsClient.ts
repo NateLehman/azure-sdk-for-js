@@ -16,32 +16,32 @@ import {
 import { PageSettings, PagedAsyncIterableIterator } from "@azure/core-paging";
 import { AzureDigitalTwinsAPI as GeneratedClient } from "./generated/azureDigitalTwinsAPI";
 import {
-  DigitalTwinsGetByIdResponse,
+  // DigitalTwinsGetByIdResponse,
   DigitalTwinsAddOptionalParams,
-  DigitalTwinsAddResponse,
+  // DigitalTwinsAddResponse,
   DigitalTwinsUpdateOptionalParams,
   DigitalTwinsUpdateResponse,
   DigitalTwinsDeleteOptionalParams,
-  DigitalTwinsGetComponentResponse,
+  // DigitalTwinsGetComponentResponse,
   DigitalTwinsUpdateComponentResponse,
   DigitalTwinsUpdateComponentOptionalParams,
-  DigitalTwinsAddRelationshipResponse,
+  // DigitalTwinsAddRelationshipResponse,
   DigitalTwinsAddRelationshipOptionalParams,
   DigitalTwinsUpdateRelationshipOptionalParams,
   DigitalTwinsUpdateRelationshipResponse,
   DigitalTwinsDeleteRelationshipOptionalParams,
   DigitalTwinsSendTelemetryOptionalParams,
   DigitalTwinsSendComponentTelemetryOptionalParams,
-  DigitalTwinsListRelationshipsResponse,
+  // DigitalTwinsListRelationshipsResponse,
   IncomingRelationship,
   DigitalTwinsListIncomingRelationshipsResponse,
-  DigitalTwinsGetRelationshipByIdResponse,
-  DigitalTwinsModelData,
-  DigitalTwinModelsGetByIdResponse,
+  // DigitalTwinsGetRelationshipByIdResponse,
+  // DigitalTwinsModelData,
+  // DigitalTwinModelsGetByIdResponse,
   DigitalTwinModelsGetByIdOptionalParams,
-  DigitalTwinModelsAddResponse,
+  // DigitalTwinModelsAddResponse,
   DigitalTwinModelsAddOptionalParams,
-  DigitalTwinModelsListResponse,
+  // DigitalTwinModelsListResponse,
   DigitalTwinModelsListOptionalParams,
   EventRoutesGetByIdResponse,
   EventRoute,
@@ -49,14 +49,27 @@ import {
   EventRoutesListNextResponse,
   EventRoutesListOptionalParams,
   QueryQueryTwinsOptionalParams,
-  QueryQueryTwinsResponse,
+  // QueryQueryTwinsResponse,
   QuerySpecification,
 } from "./generated/models";
+import {
+  DigitalTwinsGetByIdResponse as LegacyDigitalTwinsGetByIdResponse,
+  DigitalTwinsAddResponse as LegacyDigitalTwinsAddResponse,
+  DigitalTwinsGetComponentResponse as LegacyDigitalTwinsGetComponentResponse,
+  DigitalTwinsAddRelationshipResponse as LegacyDigitalTwinsAddRelationshipResponse,
+  DigitalTwinsGetRelationshipByIdResponse as LegacyDigitalTwinsGetRelationshipByIdResponse,
+  DigitalTwinModelsAddResponse as LegacyDigitalTwinModelsAddResponse,
+  DigitalTwinsModelData as LegacyDigitalTwinsModelData,
+  DigitalTwinModelsGetByIdResponse as LegacyDigitalTwinModelsGetByIdResponse,
+  DigitalTwinModelsListResponse as LegacyDigitalTwinModelsListResponse,
+  DigitalTwinsListRelationshipsResponse as LegacyDigitalTwinsListRelationshipsResponse,
+  QueryQueryTwinsResponse as LegacyQueryQueryTwinsResponse,
+} from "./legacyModels"
 import { createSpan } from "./tracing";
 import { SpanStatusCode } from "@azure/core-tracing";
 import { logger } from "./logger";
 
-export const SDK_VERSION: string = "1.1.0";
+export const SDK_VERSION: string = "1.1.0-beta.1";
 
 export interface DigitalTwinsClientOptions extends PipelineOptions {
   /**
@@ -139,10 +152,17 @@ export class DigitalTwinsClient {
   public getDigitalTwin(
     digitalTwinId: string,
     options: OperationOptions = {}
-  ): Promise<DigitalTwinsGetByIdResponse> {
+  ): Promise<LegacyDigitalTwinsGetByIdResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-getDigitalTwin", options);
     try {
-      return this.client.digitalTwins.getById(digitalTwinId, updatedOptions);
+      const result = this.client.digitalTwins.getById(digitalTwinId, updatedOptions);
+      if (result) {
+        return result.then(value => {
+          const { etag, _response } = value;
+          return { etag, _response, body: _response.parsedBody };
+        });
+      }
+      return result
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -167,11 +187,18 @@ export class DigitalTwinsClient {
     digitalTwinId: string,
     digitalTwinJson: string,
     options: DigitalTwinsAddOptionalParams = {}
-  ): Promise<DigitalTwinsAddResponse> {
+  ): Promise<LegacyDigitalTwinsAddResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-upsertDigitalTwin", options);
     try {
       const payload = JSON.parse(digitalTwinJson);
-      return this.client.digitalTwins.add(digitalTwinId, payload, updatedOptions);
+      const result = this.client.digitalTwins.add(digitalTwinId, payload, updatedOptions);
+      if (result) {
+        return result.then(value => {
+          const { etag, _response } = value;
+          return { etag, _response, body: _response.parsedBody };
+        });
+      }
+      return result;
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -252,10 +279,17 @@ export class DigitalTwinsClient {
     digitalTwinId: string,
     componentName: string,
     options: OperationOptions = {}
-  ): Promise<DigitalTwinsGetComponentResponse> {
+  ): Promise<LegacyDigitalTwinsGetComponentResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-getComponent", options);
     try {
-      return this.client.digitalTwins.getComponent(digitalTwinId, componentName, updatedOptions);
+      const result = this.client.digitalTwins.getComponent(digitalTwinId, componentName, updatedOptions);
+      if (result) {
+        return result.then(value => {
+          const { etag, _response } = value;
+          return { etag, _response, body: _response.parsedBody };
+        });
+      }
+      return result
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -315,14 +349,21 @@ export class DigitalTwinsClient {
     digitalTwinId: string,
     relationshipId: string,
     options: OperationOptions = {}
-  ): Promise<DigitalTwinsGetRelationshipByIdResponse> {
+  ): Promise<LegacyDigitalTwinsGetRelationshipByIdResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-getRelationship", options);
     try {
-      return this.client.digitalTwins.getRelationshipById(
+      const result = this.client.digitalTwins.getRelationshipById(
         digitalTwinId,
         relationshipId,
         updatedOptions
       );
+      if (result) {
+        return result.then(value => {
+          const { etag, _response } = value;
+          return { etag, _response, body: _response.parsedBody };
+        });
+      }
+      return result
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -349,15 +390,22 @@ export class DigitalTwinsClient {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types -- changing the type any would be a breaking change
     relationship: any,
     options: DigitalTwinsAddRelationshipOptionalParams = {}
-  ): Promise<DigitalTwinsAddRelationshipResponse> {
+  ): Promise<LegacyDigitalTwinsAddRelationshipResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-upsertRelationship", options);
     try {
-      return this.client.digitalTwins.addRelationship(
+      const result = this.client.digitalTwins.addRelationship(
         digitalTwinId,
         relationshipId,
         relationship,
         updatedOptions
       );
+      if (result) {
+        return result.then(value => {
+          const { etag, _response } = value;
+          return { etag, _response, body: _response.parsedBody };
+        });
+      }
+      return result
     } catch (e) {
       span.setStatus({
         code: SpanStatusCode.ERROR,
@@ -447,7 +495,7 @@ export class DigitalTwinsClient {
     digitalTwinId: string,
     options: OperationOptions,
     continuationState: PageSettings
-  ): AsyncIterableIterator<DigitalTwinsListRelationshipsResponse> {
+  ): AsyncIterableIterator<LegacyDigitalTwinsListRelationshipsResponse> {
     if (continuationState.continuationToken == null) {
       const optionsComplete: OperationOptions = {
         ...options,
@@ -495,7 +543,7 @@ export class DigitalTwinsClient {
   public listRelationships(
     digitalTwinId: string,
     options: OperationOptions & PageSettings = {}
-  ): PagedAsyncIterableIterator<any, DigitalTwinsListRelationshipsResponse> {
+  ): PagedAsyncIterableIterator<any, LegacyDigitalTwinsListRelationshipsResponse> {
     const { span, updatedOptions } = createSpan("DigitalTwinsClient-listRelationships", options);
     try {
       const iter = this.listRelationshipsAll(digitalTwinId, updatedOptions);
@@ -682,12 +730,13 @@ export class DigitalTwinsClient {
       "DigitalTwinsClient-publishComponentTelemetry",
       digitalTwinsSendComponentTelemetryOptionalParams
     );
+    const generatedSdkPayload: Record<string, unknown> = JSON.parse(payload)
     try {
       return this.client.digitalTwins.sendComponentTelemetry(
         digitalTwinId,
         componentName,
-        payload,
         messageId,
+        generatedSdkPayload,
         updatedOptions
       );
     } catch (e) {
@@ -713,7 +762,7 @@ export class DigitalTwinsClient {
     modelId: string,
     includeModelDefinition: boolean = false,
     options: OperationOptions = {}
-  ): Promise<DigitalTwinModelsGetByIdResponse> {
+  ): Promise<LegacyDigitalTwinModelsGetByIdResponse> {
     const digitalTwinModelsGetByIdOptionalParams: DigitalTwinModelsGetByIdOptionalParams = options;
     digitalTwinModelsGetByIdOptionalParams.includeModelDefinition = includeModelDefinition;
     const { span, updatedOptions } = createSpan(
@@ -743,7 +792,7 @@ export class DigitalTwinsClient {
   private async *getModelsPage(
     options: DigitalTwinModelsListOptionalParams,
     continuationState: PageSettings
-  ): AsyncIterableIterator<DigitalTwinModelsListResponse> {
+  ): AsyncIterableIterator<LegacyDigitalTwinModelsListResponse> {
     if (continuationState.continuationToken == null) {
       const optionsComplete: DigitalTwinModelsListOptionalParams = options;
       optionsComplete.maxItemsPerPage = continuationState.maxPageSize;
@@ -769,7 +818,7 @@ export class DigitalTwinsClient {
    */
   private async *getModelsAll(
     options: DigitalTwinModelsListOptionalParams
-  ): AsyncIterableIterator<DigitalTwinsModelData> {
+  ): AsyncIterableIterator<LegacyDigitalTwinsModelData> {
     const f = {};
 
     for await (const page of this.getModelsPage(options, f)) {
@@ -793,7 +842,7 @@ export class DigitalTwinsClient {
     includeModelDefinition: boolean = false,
     resultsPerPage?: number,
     options: OperationOptions & PageSettings = {}
-  ): PagedAsyncIterableIterator<DigitalTwinsModelData, DigitalTwinModelsListResponse> {
+  ): PagedAsyncIterableIterator<LegacyDigitalTwinsModelData, LegacyDigitalTwinModelsListResponse> {
     let digitalTwinModelsListOptionalParams: DigitalTwinModelsListOptionalParams = options;
     digitalTwinModelsListOptionalParams = {
       maxItemsPerPage: resultsPerPage,
@@ -838,7 +887,7 @@ export class DigitalTwinsClient {
   public createModels(
     dtdlModels: any[],
     options: OperationOptions = {}
-  ): Promise<DigitalTwinModelsAddResponse> {
+  ): Promise<LegacyDigitalTwinModelsAddResponse> {
     const digitalTwinModelsAddOptionalParams: DigitalTwinModelsAddOptionalParams = options;
     digitalTwinModelsAddOptionalParams.models = dtdlModels;
     const { span, updatedOptions } = createSpan(
@@ -1104,7 +1153,7 @@ export class DigitalTwinsClient {
     query: string,
     options: QueryQueryTwinsOptionalParams,
     continuationState: PageSettings
-  ): AsyncIterableIterator<QueryQueryTwinsResponse> {
+  ): AsyncIterableIterator<LegacyQueryQueryTwinsResponse> {
     if (continuationState.continuationToken == null) {
       const querySpecification: QuerySpecification = {
         query: query,
@@ -1157,7 +1206,7 @@ export class DigitalTwinsClient {
     query: string,
     resultsPerPage?: number,
     options: OperationOptions & PageSettings = {}
-  ): PagedAsyncIterableIterator<any, QueryQueryTwinsResponse> {
+  ): PagedAsyncIterableIterator<any, LegacyQueryQueryTwinsResponse> {
     let queryQueryTwinsOptionalParams: QueryQueryTwinsOptionalParams = options;
     queryQueryTwinsOptionalParams = {
       maxItemsPerPage: resultsPerPage,
